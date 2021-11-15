@@ -1,9 +1,10 @@
 import pygame
-from random import randint
+import random
 pygame.init()
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([500, 500])
+lanes = [93, 218, 343]
 
 class GameObject(pygame.sprite.Sprite):
   def __init__(self, x, y, image):
@@ -19,7 +20,7 @@ class Apple(GameObject):
   def __init__(self):
     super(Apple, self).__init__(0, 0, 'images/apple.png')
     self.dx = 0
-    self.dy = (randint(0, 200) / 100) + 1
+    self.dy = (random.randint(0, 200) / 100) + 1
     self.reset() 
 
   def move(self):
@@ -29,8 +30,25 @@ class Apple(GameObject):
       self.reset()
   
   def reset(self):
-    self.x = randint(50, 400)
+    self.x = random.choice(lanes)
     self.y = -64
+
+class Strawberry(GameObject):
+  def __init__(self):
+    super(Strawberry, self).__init__(0, 0, 'images/strawberry.png')
+    self.dx = (random.randint(0, 200) / 100) + 1
+    self.dy = 0
+    self.reset() 
+
+  def move(self):
+    self.x += self.dx
+    self.y += self.dy
+    if self.x > 500: 
+      self.reset()
+  
+  def reset(self):
+    self.x = -64
+    self.y = random.choice(lanes)
 
 class Player(GameObject):
   def __init__(self):
@@ -62,7 +80,7 @@ class Player(GameObject):
 
 apple = Apple()
 player = Player()
-strawberry = GameObject(120, 300, 'images/strawberry.png')
+strawberry = Strawberry()
 
 running = True
 while running:
@@ -88,6 +106,9 @@ while running:
 
     player.move()
     player.render(screen)
+
+    strawberry.move()
+    strawberry.render(screen)
 
     pygame.display.flip()
     clock.tick(60)
