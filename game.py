@@ -55,33 +55,30 @@ class Player(GameObject):
     super(Player, self).__init__(0, 0, 'images/player.png')
     self.dx = 0
     self.dy = 0
+    self.pos_x = 1
+    self.pos_y = 1
     self.reset()
 
   def left(self):
-    if self.dx > 0:
-      if self.dx <= 50:
-        self.dx -= 50
-      elif self.dx > 0:
-        self.dx -= 100
+    if self.pos_x > 0:
+      self.pos_x -= 1
+      self.update_dx_dy()
 
   def right(self):
-    if self.dx == 400:
-      self.dx += 50
-    elif self.dx < 400:
-      self.dx += 100
-     
+    if self.pos_x < len(lanes) - 1:
+      self.pos_x += 1
+      self.update_dx_dy()
+
   def up(self):
-    if self.dy > 35:
-      self.dy -= 100
+    if self.pos_y > 0:
+      self.pos_y -= 1
+      self.update_dx_dy()
 
   def down(self):
-    if self.dy < 435:
-      if self.dy < 400:
-        self.dy += 100
-        print(self.dy)
-      elif self.dy >= 400:
-        self.dy += 35
-        print(self.dy)
+    if self.pos_y < len(lanes) - 1:
+      self.pos_y += 1
+      self.update_dx_dy()
+
 
 
   def move(self):
@@ -89,12 +86,22 @@ class Player(GameObject):
     self.y -= (self.y - self.dy) * 0.25
 
   def reset(self):
-    self.x = 250 - 32
-    self.y = 250 - 32
+    self.x = lanes[self.pos_x]
+    self.y = lanes[self.pos_y]
+    self.dx = self.x
+    self.dy = self.y
+  
+  def update_dx_dy(self):
+    self.dx = lanes[self.pos_x]
+    self.dy = lanes[self.pos_y]
 
 apple = Apple()
 player = Player()
 strawberry = Strawberry()
+all_sprites = pygame.sprite.Group()
+all_sprites.add(player)
+all_sprites.add(apple)
+all_sprites.add(strawberry)
 
 running = True
 while running:
@@ -115,14 +122,9 @@ while running:
 
     screen.fill((255, 255, 255))
 
-    apple.move()
-    apple.render(screen)
-
-    player.move()
-    player.render(screen)
-
-    strawberry.move()
-    strawberry.render(screen)
+    for entity in all_sprites:
+	    entity.move()
+	    entity.render(screen)
 
     pygame.display.flip()
     clock.tick(60)
