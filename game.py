@@ -58,16 +58,30 @@ class Player(GameObject):
     self.reset()
 
   def left(self):
-    self.dx -= 100
+    if self.dx > 0:
+      if self.dx <= 50:
+        self.dx -= 50
+      elif self.dx > 0:
+        self.dx -= 100
 
   def right(self):
-    self.dx += 100
-
+    if self.dx == 400:
+      self.dx += 50
+    elif self.dx < 400:
+      self.dx += 100
+     
   def up(self):
-    self.dy -= 100
+    if self.dy > 35:
+      self.dy -= 100
 
   def down(self):
-    self.dy += 100
+    if self.dy < 435:
+      if self.dy < 400:
+        self.dy += 100
+        print(self.dy)
+      elif self.dy >= 400:
+        self.dy += 35
+        print(self.dy)
 
 
   def move(self):
