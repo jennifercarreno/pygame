@@ -1,10 +1,38 @@
 import pygame
 import random
 pygame.init()
+pygame.font.init()
+
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([500, 500])
 lanes = [93, 218, 343]
+
+class ScoreBoard(pygame.sprite.Sprite):
+  def __init__(self, x, y, score):
+    super(ScoreBoard, self).__init__()
+    self.score = score
+    self.font = pygame.font.SysFont('Comic Sans MS', 30)
+    self.surf = self.font.render(f"{self.score}", False, (0, 0, 0))
+    self.dx = 0
+    self.dy = 0
+    self.x = x
+    self.y = y
+
+
+  def update(self, points):
+    self.score += points
+
+  def move(self):
+    self.x += self.dx
+    self.y += self.dy
+
+  def render(self, screen):
+    self.surf = self.font.render(f"{self.score}", False, (0, 0, 0))
+    screen.blit(self.surf, (self.x, self.y))
+
+  def reset(self):
+	  self.score = 0
 
 class GameObject(pygame.sprite.Sprite):
   def __init__(self, x, y, image):
@@ -12,8 +40,11 @@ class GameObject(pygame.sprite.Sprite):
     self.surf = pygame.image.load(image)    
     self.x = x
     self.y = y
+    self.rect = self.surf.get_rect()
 
   def render(self, screen):
+    self.rect.x = self.x
+    self.rect.y = self.y
     screen.blit(self.surf, (self.x, self.y))
 
 class Apple(GameObject):
@@ -79,8 +110,6 @@ class Player(GameObject):
       self.pos_y += 1
       self.update_dx_dy()
 
-
-
   def move(self):
     self.x -= (self.x - self.dx) * 0.25
     self.y -= (self.y - self.dy) * 0.25
@@ -95,13 +124,39 @@ class Player(GameObject):
     self.dx = lanes[self.pos_x]
     self.dy = lanes[self.pos_y]
 
+class Bomb(GameObject):
+  def __init__(self):
+    super(Bomb, self).__init__(0, 0, 'images/bomb.png')
+    self.dx = 0
+    self.dy = (random.randint(0, 200) / 100) + 1
+    self.reset() 
+  
+  def move(self):
+    self.x += self.dx
+    self.y += self.dy
+    if self.y > 500: 
+      self.reset()
+  
+  def reset(self):
+    self.x = random.choice(lanes)
+    self.y = random.choice(lanes)
+
+
 apple = Apple()
 player = Player()
 strawberry = Strawberry()
+bomb = Bomb()
+score = ScoreBoard(30, 30, 0)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 all_sprites.add(apple)
 all_sprites.add(strawberry)
+all_sprites.add(bomb)
+all_sprites.add(score)
+
+fruit_sprites = pygame.sprite.Group()
+fruit_sprites.add(apple)
+fruit_sprites.add(strawberry)
 
 running = True
 while running:
@@ -125,6 +180,16 @@ while running:
     for entity in all_sprites:
 	    entity.move()
 	    entity.render(screen)
+    
+    fruit = pygame.sprite.spritecollideany(player, fruit_sprites)
+    if fruit:
+      strawberry.dx += .5
+      apple.dy += .5
+      score.update(100)
+      fruit.reset()
+    
+    if pygame.sprite.collide_rect(player, bomb):
+      running = False
 
     pygame.display.flip()
     clock.tick(60)
