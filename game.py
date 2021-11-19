@@ -49,7 +49,7 @@ class GameObject(pygame.sprite.Sprite):
 
 class Apple(GameObject):
   def __init__(self):
-    super(Apple, self).__init__(0, 0, 'images/apple.png')
+    super(Apple, self).__init__(0, 0, 'images/pete.png')
     self.dx = 0
     self.dy = (random.randint(0, 200) / 100) + 1
     self.reset() 
@@ -66,7 +66,7 @@ class Apple(GameObject):
 
 class Strawberry(GameObject):
   def __init__(self):
-    super(Strawberry, self).__init__(0, 0, 'images/strawberry.png')
+    super(Strawberry, self).__init__(0, 0, 'images/lipgloss.png')
     self.dx = (random.randint(0, 200) / 100) + 1
     self.dy = 0
     self.reset() 
@@ -83,7 +83,7 @@ class Strawberry(GameObject):
 
 class Player(GameObject):
   def __init__(self):
-    super(Player, self).__init__(0, 0, 'images/player.png')
+    super(Player, self).__init__(0, 0, 'images/kim.png')
     self.dx = 0
     self.dy = 0
     self.pos_x = 1
@@ -126,7 +126,7 @@ class Player(GameObject):
 
 class Bomb(GameObject):
   def __init__(self):
-    super(Bomb, self).__init__(0, 0, 'images/bomb.png')
+    super(Bomb, self).__init__(0, 0, 'images/kanye.png')
     self.dx = 0
     self.dy = (random.randint(0, 200) / 100) + 1
     self.reset() 
@@ -189,7 +189,16 @@ while running:
       fruit.reset()
     
     if pygame.sprite.collide_rect(player, bomb):
-      running = False
+      strawberry.dx = 0
+      strawberry.dy = 0
+      apple.dx = 0
+      apple.dy = 0
+      player.dx = 0
+      player.dy = 0
+      bomb.dy = 0
+      bomb.dx = 0
+
+      # running = False
 
     pygame.display.flip()
     clock.tick(60)
