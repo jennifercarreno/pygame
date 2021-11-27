@@ -47,9 +47,9 @@ class GameObject(pygame.sprite.Sprite):
     self.rect.y = self.y
     screen.blit(self.surf, (self.x, self.y))
 
-class Apple(GameObject):
+class Pete(GameObject):
   def __init__(self):
-    super(Apple, self).__init__(0, 0, 'images/pete.png')
+    super(Pete, self).__init__(0, 0, 'images/pete.png')
     self.dx = 0
     self.dy = (random.randint(0, 200) / 100) + 1
     self.reset() 
@@ -64,9 +64,9 @@ class Apple(GameObject):
     self.x = random.choice(lanes)
     self.y = -64
 
-class Strawberry(GameObject):
+class Gloss(GameObject):
   def __init__(self):
-    super(Strawberry, self).__init__(0, 0, 'images/lipgloss.png')
+    super(Gloss, self).__init__(0, 0, 'images/lipgloss.png')
     self.dx = (random.randint(0, 200) / 100) + 1
     self.dy = 0
     self.reset() 
@@ -124,9 +124,9 @@ class Player(GameObject):
     self.dx = lanes[self.pos_x]
     self.dy = lanes[self.pos_y]
 
-class Bomb(GameObject):
+class Kanye(GameObject):
   def __init__(self):
-    super(Bomb, self).__init__(0, 0, 'images/kanye.png')
+    super(Kanye, self).__init__(0, 0, 'images/kanye.png')
     self.dx = 0
     self.dy = (random.randint(0, 200) / 100) + 1
     self.reset() 
@@ -142,21 +142,21 @@ class Bomb(GameObject):
     self.y = random.choice(lanes)
 
 
-apple = Apple()
+pete = Pete()
 player = Player()
-strawberry = Strawberry()
-bomb = Bomb()
+gloss = Gloss()
+kanye = Kanye()
 score = ScoreBoard(30, 30, 0)
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
-all_sprites.add(apple)
-all_sprites.add(strawberry)
-all_sprites.add(bomb)
+all_sprites.add(pete)
+all_sprites.add(gloss)
+all_sprites.add(kanye)
 all_sprites.add(score)
 
 fruit_sprites = pygame.sprite.Group()
-fruit_sprites.add(apple)
-fruit_sprites.add(strawberry)
+fruit_sprites.add(pete)
+fruit_sprites.add(gloss)
 
 running = True
 while running:
@@ -183,22 +183,22 @@ while running:
     
     fruit = pygame.sprite.spritecollideany(player, fruit_sprites)
     if fruit:
-      strawberry.dx += .5
-      apple.dy += .5
+      gloss.dx += .5
+      pete.dy += .5
       score.update(100)
       fruit.reset()
     
-    if pygame.sprite.collide_rect(player, bomb):
-      strawberry.dx = 0
-      strawberry.dy = 0
-      apple.dx = 0
-      apple.dy = 0
-      player.dx = 0
-      player.dy = 0
-      bomb.dy = 0
-      bomb.dx = 0
+    if pygame.sprite.collide_rect(player, kanye):
+      gloss.x = gloss.x
+      gloss.y = gloss.y
+      pete.x = pete.x
+      pete.y = pete.y
+      player.x = player.x
+      player.y = player.y
+      kanye.y = kanye.y
+      kanye.x = kanye.x
 
-      # running = False
+      running = False
 
     pygame.display.flip()
     clock.tick(60)
