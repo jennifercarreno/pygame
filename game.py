@@ -1,5 +1,7 @@
 import pygame
 import random
+
+from pygame import surface
 pygame.init()
 pygame.font.init()
 
@@ -7,6 +9,13 @@ pygame.font.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode([500, 500])
 lanes = [93, 218, 343]
+
+
+def play_again():
+  screen.fill((0,0,0))
+  myfont = pygame.font.SysFont('Comic Sans MS', 40)
+  textsurface = myfont.render('Play Again? Press R to Restart', False, (255, 255, 255))
+  screen.blit(textsurface,(40,250))
 
 class ScoreBoard(pygame.sprite.Sprite):
   def __init__(self, x, y, score):
@@ -55,10 +64,10 @@ class Pete(GameObject):
     self.reset() 
 
   def move(self):
-    self.x += self.dx
-    self.y += self.dy
-    if self.y > 500: 
-      self.reset()
+      self.x += self.dx
+      self.y += self.dy
+      if self.y > 500: 
+        self.reset()
   
   def reset(self):
     self.x = random.choice(lanes)
@@ -72,10 +81,10 @@ class Gloss(GameObject):
     self.reset() 
 
   def move(self):
-    self.x += self.dx
-    self.y += self.dy
-    if self.x > 500: 
-      self.reset()
+      self.x += self.dx
+      self.y += self.dy
+      if self.x > 500: 
+        self.reset()
   
   def reset(self):
     self.x = -64
@@ -91,28 +100,28 @@ class Player(GameObject):
     self.reset()
 
   def left(self):
-    if self.pos_x > 0:
-      self.pos_x -= 1
-      self.update_dx_dy()
+      if self.pos_x > 0:
+        self.pos_x -= 1
+        self.update_dx_dy()
 
   def right(self):
-    if self.pos_x < len(lanes) - 1:
-      self.pos_x += 1
-      self.update_dx_dy()
+      if self.pos_x < len(lanes) - 1:
+        self.pos_x += 1
+        self.update_dx_dy()
 
   def up(self):
-    if self.pos_y > 0:
-      self.pos_y -= 1
-      self.update_dx_dy()
+      if self.pos_y > 0:
+        self.pos_y -= 1
+        self.update_dx_dy()
 
   def down(self):
-    if self.pos_y < len(lanes) - 1:
-      self.pos_y += 1
-      self.update_dx_dy()
+      if self.pos_y < len(lanes) - 1:
+        self.pos_y += 1
+        self.update_dx_dy()
 
   def move(self):
-    self.x -= (self.x - self.dx) * 0.25
-    self.y -= (self.y - self.dy) * 0.25
+      self.x -= (self.x - self.dx) * 0.25
+      self.y -= (self.y - self.dy) * 0.25
 
   def reset(self):
     self.x = lanes[self.pos_x]
@@ -123,6 +132,10 @@ class Player(GameObject):
   def update_dx_dy(self):
     self.dx = lanes[self.pos_x]
     self.dy = lanes[self.pos_y]
+  
+  def stop(self):
+    self.dx = 0
+    self.dy = 0
 
 class Kanye(GameObject):
   def __init__(self):
@@ -132,10 +145,10 @@ class Kanye(GameObject):
     self.reset() 
   
   def move(self):
-    self.x += self.dx
-    self.y += self.dy
-    if self.y > 500: 
-      self.reset()
+      self.x += self.dx
+      self.y += self.dy
+      if self.y > 500: 
+        self.reset()
   
   def reset(self):
     self.x = random.choice(lanes)
@@ -178,8 +191,8 @@ while running:
     screen.fill((255, 255, 255))
 
     for entity in all_sprites:
-	    entity.move()
-	    entity.render(screen)
+      entity.move()
+      entity.render(screen)
     
     fruit = pygame.sprite.spritecollideany(player, fruit_sprites)
     if fruit:
@@ -189,16 +202,10 @@ while running:
       fruit.reset()
     
     if pygame.sprite.collide_rect(player, kanye):
-      gloss.x = gloss.x
-      gloss.y = gloss.y
-      pete.x = pete.x
-      pete.y = pete.y
-      player.x = player.x
-      player.y = player.y
-      kanye.y = kanye.y
-      kanye.x = kanye.x
-
-      running = False
+      kanye.dx = 0
+      kanye.dy = 0
+      play_again()
+      # running = False
 
     pygame.display.flip()
     clock.tick(60)
