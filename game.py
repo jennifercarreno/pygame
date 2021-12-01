@@ -10,13 +10,6 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode([500, 500])
 lanes = [93, 218, 343]
 
-
-def play_again():
-  screen.fill((0,0,0))
-  myfont = pygame.font.SysFont('Comic Sans MS', 40)
-  textsurface = myfont.render('Play Again? Press R to Restart', False, (255, 255, 255))
-  screen.blit(textsurface,(40,250))
-
 class ScoreBoard(pygame.sprite.Sprite):
   def __init__(self, x, y, score):
     super(ScoreBoard, self).__init__()
@@ -187,6 +180,22 @@ while running:
             player.up()
           elif event.key == pygame.K_DOWN:
             player.down()
+          elif event.key == pygame.K_r:
+            print("key pressedr")
+            for entity in all_sprites:
+              kanye.reset()
+              kanye.dy = (random.randint(0, 200) / 100) + 1
+
+              pete.reset()
+              pete.dy = (random.randint(0, 200) / 100) + 1
+
+              gloss.reset()
+              gloss.dx = (random.randint(0, 200) / 100) + 1
+
+              entity.move()
+              entity.render(screen)
+              score.reset()
+            
 
     screen.fill((255, 255, 255))
 
@@ -204,11 +213,15 @@ while running:
     if pygame.sprite.collide_rect(player, kanye):
       kanye.dx = 0
       kanye.dy = 0
-      play_again()
-      # running = False
+      pete.dy = 0
+      pete.dx = 0
+      gloss.dx = 0
+      gloss.dy = 0
+            
 
     pygame.display.flip()
     clock.tick(60)
+
 
 
 
